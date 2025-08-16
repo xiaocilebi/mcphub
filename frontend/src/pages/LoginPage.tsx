@@ -68,9 +68,9 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Main content */}
-      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-center gap-8 px-6 py-16 md:grid-cols-3 lg:gap-16">
+      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-center px-10 py-16 md:grid-cols-3">
         {/* Left: brand + slogan */}
-        <div className="order-2 space-y-6 md:order-1 md:col-span-2">
+        <div className="order-2 space-y-6 md:order-1 md:col-span-2 pr-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm backdrop-blur dark:text-indigo-300">
             <span className="h-2 w-2 animate-pulse rounded-full bg-indigo-500" />
             {t('app.name')}

@@ -100,6 +100,8 @@ const ToolCard = ({ tool, server, onToggle, onDescriptionUpdate }: ToolCardProps
   const handleRunTool = async (arguments_: Record<string, any>) => {
     setIsRunning(true)
     try {
+      // filter empty values
+      arguments_ = Object.fromEntries(Object.entries(arguments_).filter(([_, v]) => v != null && v !== ''))
       const result = await callTool({
         toolName: tool.name,
         arguments: arguments_,
