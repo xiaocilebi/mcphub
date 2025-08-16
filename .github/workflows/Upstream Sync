@@ -1,0 +1,76 @@
+name: Upstream Sync
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+  workflow_dispatch:
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream repo
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整历史记录，对同步操作至关重要
+
+      - name: Clean issue notice
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issues'
+          labels: '🚨 Sync Fail'
+
+      - name: Sync upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          # --- 已修改为您指定的仓库 ---
+          upstream_sync_repo: samanhappy/mcphub
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
+          test_mode: false
+
+      - name: Sync check
+        if: failure()
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-issue'
+          title: '🚨 同步失败 | Sync Fail'
+          labels: '🚨 Sync Fail'
+          body: |
+            The automatic upstream sync for the repository `samanhappy/mcphub` has failed.
+
+            **Possible reasons include:**
+            - A change in the workflow file of the upstream repository, which can cause GitHub to temporarily suspend automated actions.
+            - Network issues preventing the workflow from accessing the upstream repository.
+            - Permission changes or other conflicts in the upstream repository.
+
+            **How to resolve:**
+            1.  Please check the **"Actions"** tab in this repository to see the full logs of the failed run.
+            2.  You may need to manually trigger a sync from the upstream repository. Most platforms provide a "Sync fork" button in the repository's UI.
+            3.  If the issue persists, it might be a temporary problem with the upstream repository.
+
+            ---
+            上游仓库 `samanhappy/mcphub` 的自动同步已失败。
+
+            **可能的原因包括：**
+            - 上游仓库的 workflow 文件发生了变更，这可能导致 GitHub 暂时暂停自动化操作。
+            - 网络问题导致工作流无法访问上游仓库。
+            - 上游仓库的权限设置发生变更或存在其他冲突。
+
+            **如何解决：**
+            1.  请查看此仓库的 **"Actions"** 选项卡，以获取本次失败运行的完整日志。
+            2.  您可能需要手动从上游仓库触发一次同步。大多数平台在仓库的 UI 中都提供了一个 "Sync fork" 按钮。
+            3.  如果问题持续存在，可能是上游仓库的临时性问题。
+
+            ```
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            ```
