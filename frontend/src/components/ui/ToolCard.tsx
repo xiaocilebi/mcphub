@@ -14,6 +14,15 @@ interface ToolCardProps {
   onDescriptionUpdate?: (toolName: string, description: string) => void
 }
 
+// Helper to check for "empty" values
+function isEmptyValue(value: any): boolean {
+  if (value == null) return true; // null or undefined
+  if (typeof value === 'string') return value.trim() === '';
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
+  return false;
+}
+
 const ToolCard = ({ tool, server, onToggle, onDescriptionUpdate }: ToolCardProps) => {
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -100,6 +109,8 @@ const ToolCard = ({ tool, server, onToggle, onDescriptionUpdate }: ToolCardProps
   const handleRunTool = async (arguments_: Record<string, any>) => {
     setIsRunning(true)
     try {
+      // filter empty values
+      arguments_ = Object.fromEntries(Object.entries(arguments_).filter(([_, v]) => !isEmptyValue(v)))
       const result = await callTool({
         toolName: tool.name,
         arguments: arguments_,
