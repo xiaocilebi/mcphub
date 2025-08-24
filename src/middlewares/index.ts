@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import { auth } from './auth.js';
 import { userContextMiddleware } from './userContext.js';
 import { i18nMiddleware } from './i18n.js';
-import { initializeDefaultUser } from '../models/User.js';
 import config from '../config/index.js';
 
 export const errorHandler = (
@@ -44,11 +43,6 @@ export const initMiddlewares = (app: express.Application): void => {
     } else {
       next();
     }
-  });
-
-  // Initialize default admin user if no users exist
-  initializeDefaultUser().catch((err) => {
-    console.error('Error initializing default user:', err);
   });
 
   // Protect API routes with authentication middleware, but exclude auth endpoints
