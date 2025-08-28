@@ -21,7 +21,7 @@ const ServersPage: React.FC = () => {
     handleServerRemove,
     handleServerToggle,
     triggerRefresh
-  } = useServerData();
+  } = useServerData({ refreshOnMount: true });
   const [editingServer, setEditingServer] = useState<Server | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showDxtUpload, setShowDxtUpload] = useState(false);

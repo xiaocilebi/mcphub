@@ -17,7 +17,7 @@ const GroupsPage: React.FC = () => {
     deleteGroup,
     triggerRefresh
   } = useGroupData();
-  const { servers } = useServerData();
+  const { servers } = useServerData({ refreshOnMount: true });
 
   const [editingGroup, setEditingGroup] = useState<Group | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);

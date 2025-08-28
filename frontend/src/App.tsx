@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'rea
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ServerProvider } from './contexts/ServerContext';
 import MainLayout from './layouts/MainLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
@@ -26,6 +27,7 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+      <ServerProvider>
         <ToastProvider>
           <Router basename={basename}>
             <Routes>
@@ -57,6 +59,7 @@ function App() {
             </Routes>
           </Router>
         </ToastProvider>
+        </ServerProvider>
       </AuthProvider>
     </ThemeProvider>
   );
